@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:zapys/firebase_options.dart';
 import 'package:zapys/views/login_view.dart';
+import 'package:zapys/views/notes_view.dart';
 import 'package:zapys/views/verify_email_view.dart';
 
 class HomePage extends StatelessWidget {
@@ -21,6 +22,7 @@ class HomePage extends StatelessWidget {
               final isUserEmailVerified = user.emailVerified;
               if (isUserEmailVerified) {
                 debugPrint('User verified');
+                return const NotesView();
               } else {
                 debugPrint('User need to verify email');
                 return const VerifyEmailView();
@@ -28,7 +30,6 @@ class HomePage extends StatelessWidget {
             } else {
               return const LoginView();
             }
-            return const Text('Done');
           default:
             return const CircularProgressIndicator();
         }
