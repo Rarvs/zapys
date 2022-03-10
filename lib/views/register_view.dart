@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer' as devtools show log;
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -49,28 +50,28 @@ class _RegisterViewState extends State<RegisterView> {
           ),
           TextButton(
             onPressed: () async {
-              debugPrint('Button pressed');
+              devtools.log('Button pressed');
               final email = _email.text;
               try {
                 final password = _password.text;
                 final userCredential = await FirebaseAuth.instance
                     .createUserWithEmailAndPassword(
                         email: email, password: password);
-                debugPrint('User credential: $userCredential');
+                devtools.log('User credential: $userCredential');
               } on FirebaseAuthException catch (e) {
                 switch (e.code) {
                   case 'invalid-email':
-                    debugPrint('Invalid email');
+                    devtools.log('Invalid email');
                     break;
                   case 'email-already-in-use':
-                    debugPrint('Email already in use');
+                    devtools.log('Email already in use');
                     break;
                   case 'weak-password':
-                    debugPrint('Weak Password');
+                    devtools.log('Weak Password');
                     break;
                   default:
-                    debugPrint('Something bad happened');
-                    debugPrint(e.code);
+                    devtools.log('Something bad happened');
+                    devtools.log(e.code);
                 }
               }
             },
@@ -87,7 +88,7 @@ class _RegisterViewState extends State<RegisterView> {
             onPressed: () {
               Navigator.of(context).pushNamedAndRemoveUntil(
                 '/login',
-                (route) => false,
+                (_) => false,
               );
             },
             child: const Text('Login here!'),

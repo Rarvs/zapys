@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zapys/views/home_page.dart';
 import 'package:zapys/views/login_view.dart';
+import 'package:zapys/views/notes_view.dart';
 import 'package:zapys/views/register_view.dart';
 
 void main() {
@@ -16,6 +17,7 @@ void main() {
       routes: {
         '/login': (context) => const LoginView(),
         '/register': (context) => const RegisterView(),
+        '/notes': (context) => const NotesView(),
       },
     ),
   );

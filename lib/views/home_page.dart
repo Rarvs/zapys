@@ -5,6 +5,7 @@ import 'package:zapys/firebase_options.dart';
 import 'package:zapys/views/login_view.dart';
 import 'package:zapys/views/notes_view.dart';
 import 'package:zapys/views/verify_email_view.dart';
+import 'dart:developer' as devtools show log;
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -21,10 +22,10 @@ class HomePage extends StatelessWidget {
             if (user != null) {
               final isUserEmailVerified = user.emailVerified;
               if (isUserEmailVerified) {
-                debugPrint('User verified');
+                devtools.log('User verified');
                 return const NotesView();
               } else {
-                debugPrint('User need to verify email');
+                devtools.log('User need to verify email');
                 return const VerifyEmailView();
               }
             } else {
