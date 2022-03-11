@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
 
 import 'package:zapys/constants/routes.dart';
+import 'package:zapys/services/auth/auth_exceptions.dart';
+import 'package:zapys/services/auth/auth_service.dart';
 import 'package:zapys/util/show_error_dialog.dart';
 
 class LoginView extends StatefulWidget {
@@ -53,34 +53,31 @@ class _LoginViewState extends State<LoginView> {
           ),
           TextButton(
             onPressed: () async {
-              devtools.log('Button pressed');
               final email = _email.text;
               final password = _password.text;
               try {
-                final userCredential =
-                    await FirebaseAuth.instance.signInWithEmailAndPassword(
+                await AuthService.firebase().logIn(
                   email: email,
                   password: password,
                 );
-                devtools.log('User credential: $userCredential');
-                Navigator.of(context).restorablePushNamedAndRemoveUntil(
-                  notesRoute,
-                  (_) => false,
-                );
-              } on FirebaseAuthException catch (firebaseException) {
-                switch (firebaseException.code) {
-                  case 'user-not-found':
-                    await showErrorDialog(context, 'User not found!');
-                    break;
-                  case 'wrong-password':
-                    await showErrorDialog(context, 'Wrong credentials!');
-                    break;
-                  default:
-                    await showErrorDialog(context,
-                        'Something bad happened! ${firebaseException.code}');
-                }
-              } catch (genericException) {
-                await showErrorDialog(context, genericException.toString());
+
+                final user = AuthService.firebase().currentUser;
+                user?.isEmailVerified ?? false
+                    ? Navigator.of(context).restorablePushNamedAndRemoveUntil(
+                        notesRoute,
+                        (_) => false,
+                      )
+                    : Navigator.of(context).restorablePushNamedAndRemoveUntil(
+                        verifyEmailRoute,
+                        (_) => false,
+                      );
+              } on UserNotFoundAuthException {
+                await showErrorDialog(context, 'User not found!');
+              } on WrongPasswordAuthException {
+                await showErrorDialog(context, 'Wrong credentials!');
+              } on GenericAuthException {
+                await showErrorDialog(context,
+                    'Something bad happened! Authentication exception');
               }
             },
             child: const Text('Login'),
