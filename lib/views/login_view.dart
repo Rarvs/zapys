@@ -78,7 +78,6 @@ class _LoginViewState extends State<LoginView> {
                   default:
                     await showErrorDialog(context,
                         'Something bad happened! ${firebaseException.code}');
-                    devtools.log(firebaseException.code);
                 }
               } catch (genericException) {
                 await showErrorDialog(context, genericException.toString());

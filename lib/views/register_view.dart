@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
 
 import 'package:zapys/constants/routes.dart';
+import 'package:zapys/util/show_error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -54,27 +55,33 @@ class _RegisterViewState extends State<RegisterView> {
             onPressed: () async {
               devtools.log('Button pressed');
               final email = _email.text;
+              final password = _password.text;
+
               try {
-                final password = _password.text;
-                final userCredential = await FirebaseAuth.instance
-                    .createUserWithEmailAndPassword(
-                        email: email, password: password);
-                devtools.log('User credential: $userCredential');
-              } on FirebaseAuthException catch (e) {
-                switch (e.code) {
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  email: email,
+                  password: password,
+                );
+                final user = FirebaseAuth.instance.currentUser;
+                await user?.sendEmailVerification();
+                Navigator.of(context).pushNamed(verifyEmailRoute);
+              } on FirebaseAuthException catch (firabaseException) {
+                switch (firabaseException.code) {
                   case 'invalid-email':
-                    devtools.log('Invalid email');
+                    await showErrorDialog(context, 'Invalid email!');
                     break;
                   case 'email-already-in-use':
-                    devtools.log('Email already in use');
+                    await showErrorDialog(context, 'Email already in use!');
                     break;
                   case 'weak-password':
-                    devtools.log('Weak Password');
+                    await showErrorDialog(context, 'Weak Password!');
                     break;
                   default:
-                    devtools.log('Something bad happened');
-                    devtools.log(e.code);
+                    await showErrorDialog(context,
+                        'Something bad happened! ${firabaseException.code}');
                 }
+              } catch (genericException) {
+                await showErrorDialog(context, genericException.toString());
               }
             },
             child: const Text('Register'),
