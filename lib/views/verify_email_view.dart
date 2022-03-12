@@ -22,7 +22,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               "A verification email has been sent to you, please check your spam box if you haven't found it. Or click the button bellow to resend the email"),
           TextButton(
             onPressed: () async {
-              await AuthService.firebase().sendEmailVerificationOut();
+              await AuthService.firebase().sendEmailVerification();
             },
             child: const Text('Resend email verificatiion'),
           ),

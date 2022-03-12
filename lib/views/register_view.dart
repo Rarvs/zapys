@@ -81,7 +81,7 @@ class _RegisterViewState extends State<RegisterView> {
         email: email,
         password: password,
       );
-      await AuthService.firebase().sendEmailVerificationOut();
+      await AuthService.firebase().sendEmailVerification();
       Navigator.of(context).pushNamed(verifyEmailRoute);
     } on InvalidEmailAuthException {
       await showErrorDialog(context, 'Invalid email!');

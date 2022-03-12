@@ -49,7 +49,11 @@ class FirebaseAuthProvider implements AuthProvider {
   @override
   AuthUser? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
-    return user != null ? AuthUser.fromFirebase(user) : null;
+    if (user != null) {
+      return AuthUser.fromFirebase(user);
+    } else {
+      return null;
+    }
   }
 
   @override
@@ -91,7 +95,7 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
-  Future<void> sendEmailVerificationOut() async {
+  Future<void> sendEmailVerification() async {
     final user = FirebaseAuth.instance.currentUser;
     user != null
         ? await user.sendEmailVerification()

@@ -19,6 +19,7 @@ class _NotesViewState extends State<NotesView> {
         title: const Text('Your notes'),
         actions: [
           PopupMenuButton(
+            offset: Offset.fromDirection(1),
             onSelected: (value) async {
               switch (value) {
                 case MenuAction.logout:
