@@ -33,6 +33,12 @@ class _NotesViewState extends State<NotesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).pushNamed(newNoteRoute);
+        },
+      ),
       appBar: AppBar(
         title: const Text('Your notes'),
         actions: [
