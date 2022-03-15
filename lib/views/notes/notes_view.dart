@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:zapys/constants/routes.dart';
 import 'package:zapys/enums/menu_action.dart';
 import 'package:zapys/services/auth/auth_service.dart';
+import 'package:zapys/services/crud/database_note.dart';
 import 'package:zapys/services/crud/notes_service.dart';
 
 class NotesView extends StatefulWidget {
@@ -22,12 +23,6 @@ class _NotesViewState extends State<NotesView> {
   void initState() {
     _notesService = NotesService();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _notesService.closeDataBase();
-    super.dispose();
   }
 
   @override
@@ -76,7 +71,13 @@ class _NotesViewState extends State<NotesView> {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
                       case ConnectionState.active:
-                        return const Text('Waiting for all notes...');
+                        if (snapshot.hasData) {
+                          final allNotes = snapshot.data as List<DatabaseNote>;
+                          return _listView(allNotes);
+                        } else {
+                          return const Text('Waiting for all notes...');
+                        }
+
                       default:
                         return const CircularProgressIndicator();
                     }
@@ -86,6 +87,25 @@ class _NotesViewState extends State<NotesView> {
           }
         },
       ),
+    );
+  }
+
+  Widget _listView(List<DatabaseNote> allNotes) {
+    return ListView.builder(
+      itemCount: allNotes.length,
+      itemBuilder: (context, index) {
+        final note = allNotes[index];
+        return ListTile(
+          title: Text('Nota ${index + 1}'),
+          subtitle: Text(
+            note.text,
+            maxLines: 1,
+            softWrap: true,
+            overflow: TextOverflow.ellipsis,
+          ),
+          trailing: const Icon(Icons.delete),
+        );
+      },
     );
   }
 
