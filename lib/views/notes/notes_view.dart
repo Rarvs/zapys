@@ -33,7 +33,7 @@ class _NotesViewState extends State<NotesView> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          Navigator.of(context).pushNamed(newNoteRoute);
+          Navigator.of(context).pushNamed(createOrUpdateNoteRoute);
         },
       ),
       appBar: AppBar(
@@ -61,37 +61,48 @@ class _NotesViewState extends State<NotesView> {
           ),
         ],
       ),
-      body: FutureBuilder(
-        future: _notesService.getOrCreateUser(email: userEmail),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              return StreamBuilder(
-                  stream: _notesService.allNotes,
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                      case ConnectionState.active:
-                        if (snapshot.hasData) {
-                          final allNotes = snapshot.data as List<DatabaseNote>;
-                          return NotesListView(
-                              notes: allNotes,
-                              onDeleteNote: (note) async {
-                                await _notesService.deleteNote(id: note.id);
-                              });
-                        } else {
-                          return const Text('Waiting for all notes...');
-                        }
+      body: _futureBuilder(),
+    );
+  }
 
-                      default:
-                        return const CircularProgressIndicator();
-                    }
-                  });
-            default:
-              return const CircularProgressIndicator();
-          }
-        },
-      ),
+  Widget _futureBuilder() {
+    return FutureBuilder(
+      future: _notesService.getOrCreateUser(email: userEmail),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            return StreamBuilder(
+                stream: _notesService.allNotes,
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                    case ConnectionState.active:
+                      if (snapshot.hasData) {
+                        final allNotes = snapshot.data as List<DatabaseNote>;
+                        return NotesListView(
+                          notes: allNotes,
+                          onDeleteNote: (note) async {
+                            await _notesService.deleteNote(id: note.id);
+                          },
+                          onTap: (note) {
+                            Navigator.of(context).pushNamed(
+                              createOrUpdateNoteRoute,
+                              arguments: note,
+                            );
+                          },
+                        );
+                      } else {
+                        return const Text('Waiting for all notes...');
+                      }
+
+                    default:
+                      return const CircularProgressIndicator();
+                  }
+                });
+          default:
+            return const CircularProgressIndicator();
+        }
+      },
     );
   }
 
