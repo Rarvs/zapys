@@ -20,7 +20,7 @@ Future<T?> showGenericDialog<T>({
             return TextButton(
               onPressed: () {
                 value == null
-                    ? Navigator.of(context)
+                    ? Navigator.of(context).pop()
                     : Navigator.of(context).pop(value);
               },
               child: Text(optionTitle),
