@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:zapys/services/cloud_firestore/cloud_note.dart';
 import 'package:zapys/services/crud/database_note.dart';
 import 'package:zapys/util/dialogs/delete_dialog.dart';
@@ -45,6 +46,12 @@ class NotesListView extends StatelessWidget {
             icon: const Icon(
               Icons.delete,
             ),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              Share.share(note.text);
+            },
+            icon: const Icon(Icons.share),
           ),
         );
       },

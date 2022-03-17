@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:zapys/constants/strings.dart';
 import 'package:zapys/util/dialogs/generic_dialog.dart';
 
