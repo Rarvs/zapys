@@ -1,26 +1,26 @@
-import 'package:flutter/foundation.dart';
-import 'package:zapys/constants/crud.dart';
+// import 'package:flutter/foundation.dart';
+// import 'package:zapys/constants/crud.dart';
 
-@immutable
-class DatabaseUser {
-  final int id;
-  final String email;
+// @immutable
+// class DatabaseUser {
+//   final int id;
+//   final String email;
 
-  const DatabaseUser({
-    required this.id,
-    required this.email,
-  });
+//   const DatabaseUser({
+//     required this.id,
+//     required this.email,
+//   });
 
-  DatabaseUser.fromRow(Map<String, Object?> map)
-      : id = map[idColumn] as int,
-        email = map[emailColumn] as String;
+//   DatabaseUser.fromRow(Map<String, Object?> map)
+//       : id = map[idColumn] as int,
+//         email = map[emailColumn] as String;
 
-  @override
-  String toString() => 'User, ID = $id, email = $email';
+//   @override
+//   String toString() => 'User, ID = $id, email = $email';
 
-  @override
-  bool operator ==(covariant DatabaseUser other) => id == other.id;
+//   @override
+//   bool operator ==(covariant DatabaseUser other) => id == other.id;
 
-  @override
-  int get hashCode => id.hashCode;
-}
+//   @override
+//   int get hashCode => id.hashCode;
+// }

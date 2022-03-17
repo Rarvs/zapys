@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:zapys/constants/cloud_firestore.dart';
+import 'package:zapys/constants/strings.dart';
 import 'package:zapys/services/cloud_firestore/cloud_note.dart';
 import 'package:zapys/services/cloud_firestore/cloud_storage_exceptions.dart';
 
@@ -11,11 +12,17 @@ class FirebaseCloudStorage {
 
   final notes = FirebaseFirestore.instance.collection('notes');
 
-  void createNewNote({required String ownerUserId}) async {
-    await notes.add({
+  Future<CloudNote> createNewNote({required String ownerUserId}) async {
+    final document = await notes.add({
       ownerUserIdFieldName: ownerUserId,
       textFieldName: '',
     });
+    final fectchedNote = await document.get();
+    return CloudNote(
+      documentId: fectchedNote.id,
+      ownerUserId: ownerUserId,
+      text: newNote,
+    );
   }
 
   Future<Iterable<CloudNote>> getNotes({required String ownerUserId}) async {
@@ -27,15 +34,8 @@ class FirebaseCloudStorage {
           )
           .get()
           .then(
-            (value) => value.docs.map(
-              (document) {
-                return CloudNote(
-                  documentId: document.id,
-                  ownerUserId: document.data()[ownerUserIdFieldName] as String,
-                  text: document.data()[textFieldName] as String,
-                );
-              },
-            ),
+            (value) =>
+                value.docs.map((document) => CloudNote.fromSnapshot(document)),
           );
     } catch (e) {
       throw CouldNotGetAllNotesException();
