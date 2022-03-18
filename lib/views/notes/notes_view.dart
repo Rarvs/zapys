@@ -1,9 +1,11 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zapys/constants/routes.dart';
+import 'package:zapys/constants/styles.dart';
 import 'package:zapys/enums/menu_action.dart';
 import 'package:zapys/services/auth/auth_service.dart';
+import 'package:zapys/services/auth/bloc/auth_bloc.dart';
+import 'package:zapys/services/auth/bloc/auth_event.dart';
 import 'package:zapys/services/cloud_firestore/cloud_note.dart';
 import 'package:zapys/services/cloud_firestore/firebase_cloud_storage.dart';
 import 'package:zapys/util/dialogs/log_out_dialog.dart';
@@ -31,10 +33,10 @@ class _NotesViewState extends State<NotesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
         onPressed: () {
           Navigator.of(context).pushNamed(createOrUpdateNoteRoute);
         },
+        child: const Icon(Icons.add),
       ),
       appBar: AppBar(
         title: const Text('Your notes'),
@@ -65,6 +67,12 @@ class _NotesViewState extends State<NotesView> {
     );
   }
 
+  void _logOut() async {
+    context.read<AuthBloc>().add(
+          const AuthEventLogOut(),
+        );
+  }
+
   Widget _futureBuilder() {
     return StreamBuilder(
         stream: _notesService.allNotes(ownerUserId: userId),
@@ -89,18 +97,9 @@ class _NotesViewState extends State<NotesView> {
               } else {
                 return const Text('Waiting for all notes...');
               }
-
             default:
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
           }
         });
-  }
-
-  void _logOut() async {
-    await AuthService.firebase().logOut();
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      loginRoute,
-      (_) => false,
-    );
   }
 }

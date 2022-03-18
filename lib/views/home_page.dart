@@ -1,40 +1,32 @@
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:zapys/services/auth/auth_service.dart';
+import 'package:zapys/services/auth/bloc/auth_bloc.dart';
+import 'package:zapys/services/auth/bloc/auth_event.dart';
+import 'package:zapys/services/auth/bloc/auth_state.dart';
 import 'package:zapys/views/login_view.dart';
 import 'package:zapys/views/notes/notes_view.dart';
 import 'package:zapys/views/verify_email_view.dart';
-import 'dart:developer' as devtools show log;
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: AuthService.firebase().initialize(),
-      builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.done:
-            final user = AuthService.firebase().currentUser;
-            if (user != null) {
-              final isUserEmailVerified = user.isEmailVerified;
-              if (isUserEmailVerified) {
-                devtools.log('User verified');
-                return const NotesView();
-              } else {
-                devtools.log('User need to verify email');
-                return const VerifyEmailView();
-              }
-            } else {
-              return const LoginView();
-            }
-          default:
-            return const Center(child: CircularProgressIndicator());
-        }
-      },
-    );
+    context.read<AuthBloc>().add(const AuthEventInitialize());
+
+    return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+      if (state is AuthStateLoggedIn) {
+        return const NotesView();
+      } else if (state is AuthStateNeedsVerification) {
+        return const VerifyEmailView();
+      } else if (state is AuthStateLoggedOut) {
+        return const LoginView();
+      } else {
+        return const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        );
+      }
+    });
   }
 }
 // class HomePage extends StatefulWidget {
