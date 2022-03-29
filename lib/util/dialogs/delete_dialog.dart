@@ -5,8 +5,8 @@ import 'package:zapys/util/dialogs/generic_dialog.dart';
 Future<bool> showDeleteDialog(BuildContext context, String noteTitle) {
   return showGenericDialog(
     context: context,
-    title: deleteNoteDialogTitle + noteTitle,
-    content: deleteNoteDialogContent + noteTitle + '?',
+    title: deleteNoteDialogTitleTxt + noteTitle,
+    content: deleteNoteDialogContentTxt + noteTitle + '?',
     optionsBuilder: () => {
       'Cancel': false,
       'Delete': true,

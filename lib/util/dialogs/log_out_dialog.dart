@@ -7,8 +7,8 @@ Future<bool> showLogOutDialog(
 ) {
   return showGenericDialog<bool>(
     context: context,
-    title: logOutDialogTitle,
-    content: logOutDialogContent,
+    title: logOutDialogTitleTxt,
+    content: logOutDialogContentTxt,
     optionsBuilder: () => {
       'Cancel': false,
       'Log Out': true,

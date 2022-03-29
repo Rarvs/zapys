@@ -5,6 +5,7 @@ import 'package:zapys/services/auth/bloc/auth_event.dart';
 import 'package:zapys/services/auth/bloc/auth_state.dart';
 import 'package:zapys/views/login_view.dart';
 import 'package:zapys/views/notes/notes_view.dart';
+import 'package:zapys/views/register_view.dart';
 import 'package:zapys/views/verify_email_view.dart';
 
 class HomePage extends StatelessWidget {
@@ -21,6 +22,8 @@ class HomePage extends StatelessWidget {
         return const VerifyEmailView();
       } else if (state is AuthStateLoggedOut) {
         return const LoginView();
+      } else if (state is AuthStateRegistering) {
+        return const RegisterView();
       } else {
         return const Scaffold(
           body: Center(child: CircularProgressIndicator()),

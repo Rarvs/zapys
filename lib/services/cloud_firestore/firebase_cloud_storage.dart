@@ -21,7 +21,7 @@ class FirebaseCloudStorage {
     return CloudNote(
       documentId: fectchedNote.id,
       ownerUserId: ownerUserId,
-      text: newNote,
+      text: newNoteTxt,
     );
   }
 
