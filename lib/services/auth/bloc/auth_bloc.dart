@@ -4,7 +4,14 @@ import 'package:zapys/services/auth/bloc/auth_event.dart';
 import 'package:zapys/services/auth/bloc/auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc(AuthProvider provider) : super(const AuthStateUnitialized()) {
+  AuthBloc(AuthProvider provider)
+      : super(const AuthStateUnitialized(isLoading: true)) {
+    on<AuthEventShouldRegister>((event, emit) {
+      emit(const AuthStateRegistering(
+        exception: null,
+        isLoading: false,
+      ));
+    });
     on<AuthEventSendEmailVerifictaion>((event, emit) async {
       await provider.sendEmailVerification();
       emit(state);
@@ -15,9 +22,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         await provider.createUser(email: email, password: password);
         await provider.sendEmailVerification();
-        emit(const AuthStateNeedsVerification());
+        emit(const AuthStateNeedsVerification(isLoading: false));
       } on Exception catch (exception) {
-        emit(AuthStateRegistering(exception));
+        emit(AuthStateRegistering(
+          exception: exception,
+          isLoading: false,
+        ));
       }
     });
     on<AuthEventInitialize>(
@@ -27,14 +37,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (user == null) {
           emit(const AuthStateLoggedOut(exception: null, isLoading: false));
         } else if (user.isEmailVerified == false) {
-          emit(const AuthStateNeedsVerification());
+          emit(const AuthStateNeedsVerification(isLoading: false));
         } else {
-          emit(AuthStateLoggedIn(user));
+          emit(AuthStateLoggedIn(user: user, isLoading: false));
         }
       }),
     );
     on<AuthEventLogIn>((event, emit) async {
-      emit(const AuthStateLoggedOut(exception: null, isLoading: true));
+      emit(const AuthStateLoggedOut(
+          exception: null, isLoading: true, loadingText: 'Loggin in...'));
       final email = event.email;
       final password = event.password;
       try {
@@ -44,10 +55,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         );
         if (user.isEmailVerified == false) {
           emit(const AuthStateLoggedOut(exception: null, isLoading: false));
-          emit(const AuthStateNeedsVerification());
+          emit(const AuthStateNeedsVerification(isLoading: false));
         } else {
           emit(const AuthStateLoggedOut(exception: null, isLoading: false));
-          emit(AuthStateLoggedIn(user));
+          emit(AuthStateLoggedIn(user: user, isLoading: false));
         }
       } on Exception catch (exception) {
         emit(AuthStateLoggedOut(exception: exception, isLoading: false));

@@ -14,3 +14,5 @@ const String invalidEmailTxt = 'Invalid email!';
 const String emailAlreadyInUseTxt = 'Email already in use!';
 const String genericAuthErrorTxt =
     'Something bad happened! Authentication exception!';
+
+const String loadingMessageTxt = 'Please wait a moment';
