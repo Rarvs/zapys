@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:zapys/constants/routes.dart';
 import 'package:zapys/constants/strings.dart';
 import 'package:zapys/services/auth/auth_exceptions.dart';
-import 'package:zapys/services/auth/auth_service.dart';
 import 'package:zapys/services/auth/bloc/auth_bloc.dart';
 import 'package:zapys/services/auth/bloc/auth_event.dart';
 import 'package:zapys/services/auth/bloc/auth_state.dart';
@@ -51,41 +49,46 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   Widget _body() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        TextField(
-          controller: _email,
-          keyboardType: TextInputType.emailAddress,
-          enableSuggestions: false,
-          decoration: const InputDecoration(hintText: 'Enter email'),
-        ),
-        TextField(
-          controller: _password,
-          obscureText: true,
-          enableSuggestions: false,
-          autocorrect: false,
-          decoration: const InputDecoration(hintText: 'Enter password'),
-        ),
-        TextButton(
-          onPressed: _register,
-          child: const Text('Register'),
-        ),
-        const SizedBox(
-          height: 32,
-        ),
-        const Text(
-          'Already have a login? ',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        TextButton(
-          onPressed: () {
-            context.read<AuthBloc>().add(const AuthEventLogOut());
-          },
-          child: const Text('Login here!'),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          TextField(
+            controller: _email,
+            keyboardType: TextInputType.emailAddress,
+            enableSuggestions: false,
+            autocorrect: false,
+            autofocus: true,
+            decoration: const InputDecoration(hintText: 'Enter email'),
+          ),
+          TextField(
+            controller: _password,
+            obscureText: true,
+            enableSuggestions: false,
+            autocorrect: false,
+            decoration: const InputDecoration(hintText: 'Enter password'),
+          ),
+          TextButton(
+            onPressed: _register,
+            child: const Text('Register'),
+          ),
+          const SizedBox(
+            height: 32,
+          ),
+          const Text(
+            'Already have a login? ',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          TextButton(
+            onPressed: () {
+              context.read<AuthBloc>().add(const AuthEventLogOut());
+            },
+            child: const Text('Login here!'),
+          ),
+        ],
+      ),
     );
   }
 

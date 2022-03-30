@@ -5,6 +5,9 @@ const String deleteNoteDialogTitleTxt = 'Delete ';
 const String deleteNoteDialogContentTxt = 'Are you sure you want to delete ';
 const String cannotShareNoteDialogTitleTxt = 'Cannot share ';
 const String cannotShareNoteDialogContentTxt = "Empty notes can't be shared";
+const String resetPasswordEmailSentDialogTitleTxt = 'Password Reset';
+const String resetPasswordEmailSentDialogContetTxt =
+    'An reset password link has been sent to your email, please check your inbox and spam folders';
 
 const String newNoteTxt = 'This is your new note';
 const String loadingTxt = 'Loading...';
