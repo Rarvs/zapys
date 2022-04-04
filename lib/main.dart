@@ -7,7 +7,7 @@ import 'package:zapys/util/theme/custom_theme.dart';
 import 'package:zapys/views/home_page.dart';
 import 'package:zapys/views/notes/create_update_note_view.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(
